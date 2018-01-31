@@ -244,7 +244,7 @@ export default {
             });
         },
         handleAdd(){
-          window.open('caseAdd');
+          window.open('taskAdd');
         },
         formatMerFlag(row, column) {
             return row.merFlag==1?'商户':'门店';
@@ -276,7 +276,8 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.post('/tmonkeyApi/tasks/'+rows[index].num,param,{emulateJSON:true}).then(function(response){
+          debugger
+          this.$http.put('/tmonkeyApi/tasks/'+rows[index].id,param,{emulateJSON:true}).then(function(response){
               console.log(response.data);
               var data=response.data;
               //_this.displayInfo.showLoading = false;
@@ -321,7 +322,7 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.post('/tmonkeyApi/cases',param,{emulateJSON:true}).then(function(response){
+          this.$http.post('/tmonkeyApi/tasks',param,{emulateJSON:true}).then(function(response){
               console.log(response.data);
               var data=response.data;
               //_this.displayInfo.showLoading = false;
@@ -372,16 +373,17 @@ export default {
 
             _this.displayInfo.showLoading=false;
             if(data.code==0){
-              data.data.forEach(function(item,index){
-                _this.tableData.push({
-                  'num':item[0],
-                  'name':item[1],
-                  'team':item[2]==0?'影票':'饭票',
-                  'platform':item[3]==0?'安卓':'IOS',
-                  'comments':item[4],
-                });
+              _this.tableData=data.data;
+              // data.data.forEach(function(item,index){
+              //   _this.tableData.push({
+              //     'num':item[0],
+              //     'name':item[1],
+              //     'team':item[2]==0?'影票':'饭票',
+              //     'platform':item[3]==0?'安卓':'IOS',
+              //     'comments':item[4],
+              //   });
 
-              });
+              // });
             }
             
             else {

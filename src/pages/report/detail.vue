@@ -46,15 +46,35 @@
             v-loading="displayInfo.showLoading"
             element-loading-text="拼命加载中"
             style="width: 100%" >
-                <el-table-column
-                  prop="clearTime"
-                  label="清算日期"
+                <!-- <el-table-column
+                  prop="tuandui"
+                  label="团队"
                   sortable
+                  >
+                </el-table-column> -->
+                <el-table-column
+                  prop="id"
+                  label="ID"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="realStlDate"
-                  label="实际拨款日期"
+                  prop="name"
+                  label="用例名称"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="schema"
+                  label="url_schema"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="keywords"
+                  label="关键字"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="comments"
+                  label="备注"
                   >
                 </el-table-column>
                 <el-table-column
@@ -63,8 +83,8 @@
                   label="操作"
                   >
                   <span>
-                    <!-- <el-button @click="handleClick" type="text" size="small">查看</el-button> -->
-                    <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">修改</el-button>
+                    <!-- <el-button @click="handleClick" type="text" size="small"></el-button> -->
+                    <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
                   </span>
                 </el-table-column>
             </el-table>
@@ -308,20 +328,27 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.get('/tmonkeyApi/cases',{params:param}).then(function(response){
+          this.$http.get('/tmonkeyApi/logs',{params:{}}).then(function(response){
             console.log(response.data);
             var data=response.data;
             //_this.displayInfo.showLoading = false;
             //this.orderInfo.useVoucher=true;
 
             _this.displayInfo.showLoading=false;
-            if(data.resCode == _this.needloginCode) {
-              location.href="../admin/login/login.html"
+            if(data.code==0){
+              _this.tableData=data.data;
+              // data.data.forEach(function(item,index){
+              //   _this.tableData.push({
+              //     'num':item[0],
+              //     'name':item[1],
+              //     'schema':item[2],
+              //     'keywords':item[3],
+              //     'comments':item[4],
+              //   });
+
+              // });
             }
-            else if(data.resCode == successCode) {
-              _this.tableData=data.result.list;
-              _this.totalNum=data.result.totalNum;
-            }
+            
             else {
               _this.$message.error(data.resDesc);
               

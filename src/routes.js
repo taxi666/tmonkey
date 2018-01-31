@@ -7,7 +7,7 @@ import taskAdd from './pages/task/add.vue'
 import taskList from './pages/task/list.vue'
 import index from './pages/index/index.vue'
 import reportDetail from './pages/report/detail.vue'
-import reportOverview from './pages/report/overview.vue'
+import reportList from './pages/report/list.vue'
 
 
 
@@ -49,11 +49,11 @@ const routes = [
     }
   },
   {
-    path: path + '/reportOverview',
-    name: 'reportOverview',
-    component: reportOverview,
+    path: path + '/reportList',
+    name: 'reportList',
+    component: reportList,
     meta: {
-      title: '测试报告总览'
+      title: '测试报告列表'
     }
   },
   {

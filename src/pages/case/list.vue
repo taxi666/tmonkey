@@ -46,10 +46,15 @@
             v-loading="displayInfo.showLoading"
             element-loading-text="拼命加载中"
             style="width: 100%" >
-                <el-table-column
+                <!-- <el-table-column
                   prop="tuandui"
                   label="团队"
                   sortable
+                  >
+                </el-table-column> -->
+                <el-table-column
+                  prop="id"
+                  label="ID"
                   >
                 </el-table-column>
                 <el-table-column
@@ -280,7 +285,7 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.post('/tmonkeyApi/tasks',param,{emulateJSON:true}).then(function(response){
+          this.$http.post('/tmonkeyApi/cases',param,{emulateJSON:true}).then(function(response){
               console.log(response.data);
               var data=response.data;
               //_this.displayInfo.showLoading = false;
@@ -323,7 +328,7 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.get('/tmonkeyApi/tasks',{params:{}}).then(function(response){
+          this.$http.get('/tmonkeyApi/cases',{params:{}}).then(function(response){
             console.log(response.data);
             var data=response.data;
             //_this.displayInfo.showLoading = false;
@@ -331,16 +336,17 @@ export default {
 
             _this.displayInfo.showLoading=false;
             if(data.code==0){
-              data.data.forEach(function(item,index){
-                _this.tableData.push({
-                  'num':item[0],
-                  'name':item[1],
-                  'schema':item[2],
-                  'keywords':item[3],
-                  'comments':item[4],
-                });
+              _this.tableData=data.data;
+              // data.data.forEach(function(item,index){
+              //   _this.tableData.push({
+              //     'num':item[0],
+              //     'name':item[1],
+              //     'schema':item[2],
+              //     'keywords':item[3],
+              //     'comments':item[4],
+              //   });
 
-              });
+              // });
             }
             
             else {

@@ -2,65 +2,105 @@
   <div id="app" v-cloak class="page_wrapper">
     <el-form :inline="false" :model="formInfo" ref="formInfo" label-width="170px" class="search-form" label-position="right" :rules="rules">
         <el-row>
-          <el-col :span="12">
-              <el-form-item label="名称" prop="endClearTime">
-                  <el-input v-model="formInfo.name"></el-input>
-              </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
             <el-col :span="12">
-                <el-form-item label="团队" prop="team">
-                    <el-select v-model="formInfo.team">
+                <el-form-item label="团队" prop="beginClearTime">
+                    <el-select v-model="formInfo.merFlag"><!-- 下拉选择框，v-model为表单项目变量名称 -->
                       <el-option label="请选择" value=""></el-option>
-                      <el-option label="饭票" value="1"></el-option>
-                      <el-option label="影票" value="0"></el-option>
+                      <el-option label="商户" value="1"></el-option>
+                      <el-option label="门店" value="0"></el-option>
                     </el-select>
                 </el-form-item>
             </el-col>
-            
-        </el-row>
-        <el-row>
             <el-col :span="12">
-                <el-form-item label="平台" prop="platform">
-                    <el-select v-model="formInfo.platform">
-                      <el-option label="请选择" value=""></el-option>
-                      <el-option label="IOS" value="IOS"></el-option>
-                      <el-option label="ANDROID" value="ANDROID"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            
-        </el-row>
-        <el-row>
-            <el-col :span="12">
-                <el-form-item label="关联测试用例ID" prop="beginRealStlDate">
-                    <el-input v-model="formInfo.cases"></el-input>
+                <el-form-item label="用例名称" prop="endClearTime">
+                    <el-input v-model="formInfo.merNo"></el-input>
                 </el-form-item>
             </el-col>
         </el-row>
-        <!-- <el-row>
-          <el-col :span="12">
-            <el-form-item label="匹配关键字" prop="endRealStlDate">
-                <el-input v-model="formInfo.keywords"></el-input>
-            </el-form-item>
-          </el-col>
-        </el-row> -->
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="备注" prop="endRealStlDate">
-                <el-input v-model="formInfo.comments"></el-input>
-            </el-form-item>
-          </el-col>
+            <el-col :span="12">
+                <el-form-item label="url_schema" prop="beginRealStlDate">
+                    <el-input v-model="formInfo.merNo"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="12">
+                <el-form-item label="匹配关键字" prop="endRealStlDate">
+                    <el-input v-model="formInfo.merNo"></el-input>
+                </el-form-item>
+            </el-col>
         </el-row>
         <el-row>
             <el-form-item>
-                <el-button type="primary" @click="handleSubmit">提交</el-button>
+                <el-button type="primary" @click="handleSubmit">查询</el-button>
                 <el-button @click="handleReset">重置</el-button>
+                <el-button type="primary" @click="handleAdd">新增</el-button>
             </el-form-item>
         </el-row>
     </el-form>
-    
+    <div class="search-table">
+        <template>
+            <el-table
+            :data="tableData"
+            border
+            stripe
+            v-loading="displayInfo.showLoading"
+            element-loading-text="拼命加载中"
+            style="width: 100%" >
+                <!-- <el-table-column
+                  prop="tuandui"
+                  label="团队"
+                  sortable
+                  >
+                </el-table-column> -->
+                <el-table-column
+                  prop="id"
+                  label="ID"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="taskName"
+                  label="任务名称"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="status"
+                  label="任务状态"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="logSize"
+                  label="日志大小"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="createTime"
+                  label="时间"
+                  >
+                </el-table-column>
+                <el-table-column
+                  inline-template
+                  :context="_self"
+                  label="操作"
+                  >
+                  <span>
+                    <!-- <el-button @click="handleClick" type="text" size="small"></el-button> -->
+                    <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
+                  </span>
+                </el-table-column>
+            </el-table>
+        </template>
+    </div>
+    <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="formInfo.pageNum"
+          :page-sizes="[20, 50, 100, 200]"
+          :page-size="formInfo.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalNum">
+        </el-pagination>
+    </div> 
     <!-- alert提示modal弹框 -->
     <!-- <modal :show.sync="displayInfo.showModal" :txt.sync="displayInfo.modalTxt" v-on:closeModal="closeModal"></modal> -->
     <!-- toast -->
@@ -102,6 +142,26 @@ import fanUtils from '../../common/js/fanUtils.js'
 // import util from '../../common/js/util.js'
 
 var urlData=fanUtils.GetRequest();
+// var getGPS=function(callback){
+//     var _this=this;
+//     var timestamp = Date.parse(new Date());
+//     window.location.href = "http://cmbls/gps?id=" + timestamp;      
+//     CMBLS = {};
+//     CMBLS.gps = {}
+//     CMBLS.gps.successCallback = function(id, message) {
+//         var messageArray=(message+"").split(">");
+//         var latitude=messageArray[2].split("<")[0];
+//         var longitude=messageArray[4].split("<")[0];
+//         _this.orderInfo.longitude=longitude.toString();
+//         _this.orderInfo.dimension=latitude.toString(); 
+//         util.setCookie('gps', JSON.stringify({longitude:longitude, latitude:latitude}));
+//         callback();
+//     }
+//     CMBLS.gps.failCallback = function(id, message) {
+//         util.setCookie('gps', JSON.stringify({longitude:'121.472644', latitude:'31.231706'}));
+//         callback();
+//     }
+// };
 export default {
     name: 'app',
     components: {
@@ -112,7 +172,12 @@ export default {
     data:function() {
       return {
         formInfo:{
-      
+            beginClearTime:'',
+            endClearTime:'',
+            beginRealStlDate:'',
+            endRealStlDate:'',
+            pageSize:20,
+            pageNum:1,
         },
         modifyFormInfo:{
           realDate:'',
@@ -175,7 +240,7 @@ export default {
             this.$refs.formInfo.validate((valid) => {
               if (valid) {
                 //alert('submit!');
-                // this.formInfo.pageNum=1;
+                this.formInfo.pageNum=1;
                 this.handleSearch();
               } else {
                 console.log('error submit!!');
@@ -220,9 +285,12 @@ export default {
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.put('/tmonkeyApi/tasks',param,{emulateJSON:true}).then(function(response){
+          this.$http.post('/tmonkeyApi/cases',param,{emulateJSON:true}).then(function(response){
               console.log(response.data);
               var data=response.data;
+              //_this.displayInfo.showLoading = false;
+              //this.orderInfo.useVoucher=true;
+
               _this.displayInfo.showLoading=false;
               if(data.resCode == successCode) {
                 _this.displayInfo.showDialog=false;
@@ -231,8 +299,16 @@ export default {
                   type: 'success',
                   showClose: true,
                 });
-
                 _this.handleSearch();
+                    
+                      // data.body.rows[0].list.forEach(function(item,index){
+                      //     if(!_this.voucherInfo.list[index]){
+                      //         _this.voucherInfo.list.push({});
+                      //     }
+                      //     _this.voucherInfo.list[index].isSelected=false;
+                      //     _this.voucherInfo.list[index].ticketPrice=item.ticketPrice;
+                      //     _this.voucherInfo.list[index].useDate=item.useDate;
+                      //     _this.voucherInfo.list[index].codeNo=item.codeNo;
                                     
               }
               else {
@@ -243,26 +319,36 @@ export default {
         },
         handleSearch(){
           var _this=this;
-          // this.formInfo.beginClearTime=fanUtils.formatDate(this.formInfo.beginClearTime);
-          // this.formInfo.endClearTime=fanUtils.formatDate(this.formInfo.endClearTime);
-          // this.formInfo.beginRealStlDate=fanUtils.formatDate(this.formInfo.beginRealStlDate);
-          // this.formInfo.endRealStlDate=fanUtils.formatDate(this.formInfo.endRealStlDate);
+          this.formInfo.beginClearTime=fanUtils.formatDate(this.formInfo.beginClearTime);
+          this.formInfo.endClearTime=fanUtils.formatDate(this.formInfo.endClearTime);
+          this.formInfo.beginRealStlDate=fanUtils.formatDate(this.formInfo.beginRealStlDate);
+          this.formInfo.endRealStlDate=fanUtils.formatDate(this.formInfo.endRealStlDate);
           var param=fanUtils.deleteEmptyJsonItem(this.formInfo);
           console.log('param:');
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.put('/tmonkeyApi/tasks',param).then(function(response){
+          this.$http.get('/tmonkeyApi/logs',{params:{}}).then(function(response){
             console.log(response.data);
             var data=response.data;
+            //_this.displayInfo.showLoading = false;
             //this.orderInfo.useVoucher=true;
 
             _this.displayInfo.showLoading=false;
-            
-            if(data.code == 0) {
-              alert(data.msg);
-              location.href="taskList"
+            if(data.code==0){
+              _this.tableData=data.data;
+              // data.data.forEach(function(item,index){
+              //   _this.tableData.push({
+              //     'num':item[0],
+              //     'name':item[1],
+              //     'schema':item[2],
+              //     'keywords':item[3],
+              //     'comments':item[4],
+              //   });
+
+              // });
             }
+            
             else {
               _this.$message.error(data.resDesc);
               
