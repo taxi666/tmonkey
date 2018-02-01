@@ -11,7 +11,12 @@
 		<div class="index_body">
 		  <div id="sideBar" class="side_bar">
         <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" unique-opened >
-		      <el-submenu index="1" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
+		      <el-submenu index="3" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
+            <template slot="title" >测试用例管理</template><!-- 菜单名称 -->
+            <el-menu-item index="3-1" ><router-link :to="{name:'caseList'}">列表</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
+            <el-menu-item index="3-2" ><router-link :to="{name:'caseAdd'}">新增</router-link></el-menu-item>
+          </el-submenu>
+          <el-submenu index="1" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
 		        <template slot="title" >测试任务管理</template><!-- 菜单名称 -->
             <el-menu-item index="1-1" ><router-link :to="{name:'taskList'}">列表</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
             <el-menu-item index="1-2" ><router-link :to="{name:'taskAdd'}">新增</router-link></el-menu-item>
@@ -22,11 +27,7 @@
             <el-menu-item index="2-2" ><router-link :to="{name:'reportDetail'}">详情</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
             
           </el-submenu>
-          <el-submenu index="3" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
-            <template slot="title" >测试用例管理</template><!-- 菜单名称 -->
-            <el-menu-item index="3-1" ><router-link :to="{name:'caseList'}">列表</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
-            <el-menu-item index="3-2" ><router-link :to="{name:'caseAdd'}">新增</router-link></el-menu-item>
-          </el-submenu>
+          
 		      
 		    </el-menu>
 		  </div>

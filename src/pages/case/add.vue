@@ -36,7 +36,21 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="备注" prop="endRealStlDate">
+            <el-form-item label="返回报文(选填)" prop="response">
+                <el-input v-model="formInfo.response" @blur="handleResponseChange"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="执行次数" prop="total_count">
+                <el-input v-model="formInfo.total_count" ></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="备注(选填)" prop="endRealStlDate">
                 <el-input v-model="formInfo.comments"></el-input>
             </el-form-item>
           </el-col>
@@ -100,7 +114,7 @@ export default {
     data:function() {
       return {
         formInfo:{
-      
+          total_count:''
         },
         modifyFormInfo:{
           realDate:'',
@@ -141,8 +155,28 @@ export default {
     mounted:function(){
     },
     methods: {
+        handleResponseChange:function(e){
+          var param={
+            response:this.formInfo.response
+          }
+          var that=this;
+          this.$http.post('/tmonkeyApi/cases/total',param,{emulateJSON:true}).then(function(response){
+              console.log(response.data);
+              var data=response.data;
+              that.displayInfo.showLoading=false;
+              if(data.code == 0 && data.data!==null) {
+                that.formInfo.total_count=data.data;
+                // that.formInfo.total_count=100;
+                                    
+              }
+              else {
+                // that.$message.error(data.resDesc);
+                
+              } 
+          });
+        },
         closeModal:function(){
-            this.displayInfo.showModal=false;
+          this.displayInfo.showModal=false;
         },
         showToast:function(txt){
             this.displayInfo.showToast=false;
@@ -154,6 +188,7 @@ export default {
             this.displayInfo.showTxt='';
             console.log('closeToast')
         },
+        
         handleReset() {
             console.log(this.$refs.formInfo);
             console.log(this.$refs.formInfo.merNo);
@@ -236,11 +271,12 @@ export default {
           // this.formInfo.beginRealStlDate=fanUtils.formatDate(this.formInfo.beginRealStlDate);
           // this.formInfo.endRealStlDate=fanUtils.formatDate(this.formInfo.endRealStlDate);
           var param=fanUtils.deleteEmptyJsonItem(this.formInfo);
+          var param=this.formInfo;
           console.log('param:');
           console.log(param);
           
           this.displayInfo.showLoading=true;
-          this.$http.post('/tmonkeyApi/cases',param).then(function(response){
+          this.$http.put('/tmonkeyApi/cases',param).then(function(response){
             console.log(response.data);
             var data=response.data;
             //this.orderInfo.useVoucher=true;
@@ -249,10 +285,10 @@ export default {
             
             if(data.code == 0) {
               alert(data.msg);
-              location.href="caseList"
+              // location.href="caseList"
             }
             else {
-              _this.$message.error(data.resDesc);
+              _this.$message.error(data.msg);
               
             } 
           });

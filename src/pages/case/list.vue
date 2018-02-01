@@ -73,6 +73,16 @@
                   >
                 </el-table-column>
                 <el-table-column
+                  prop="response"
+                  label="返回报文"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="total_count"
+                  label="执行次数"
+                  >
+                </el-table-column>
+                <el-table-column
                   prop="comments"
                   label="备注"
                   >
