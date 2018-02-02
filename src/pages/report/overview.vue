@@ -63,7 +63,7 @@
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="status"
+                  prop="state"
                   label="任务状态"
                   >
                 </el-table-column>
@@ -83,7 +83,7 @@
                   label="操作"
                   >
                   <span>
-                    <!-- <el-button @click="handleClick" type="text" size="small"></el-button> -->
+                    <el-button @click="handleClickDetail($index,tableData)" type="text" size="small">详情</el-button>
                     <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
                   </span>
                 </el-table-column>
@@ -218,6 +218,13 @@ export default {
     mounted:function(){
     },
     methods: {
+        handleClickDetail(index,tableData){
+          console.log('idnex'+index);
+          console.log('tableData');
+          console.log(tableData);
+          var logId=tableData[index].id;
+          location.href='reportDetail?logId='+logId+'&taskId='+tableData[index].taskId;
+        },
         closeModal:function(){
             this.displayInfo.showModal=false;
         },

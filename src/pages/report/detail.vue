@@ -1,42 +1,6 @@
 <template>
   <div id="app" v-cloak class="page_wrapper">
-    <el-form :inline="false" :model="formInfo" ref="formInfo" label-width="170px" class="search-form" label-position="right" :rules="rules">
-        <el-row>
-            <el-col :span="12">
-                <el-form-item label="团队" prop="beginClearTime">
-                    <el-select v-model="formInfo.merFlag"><!-- 下拉选择框，v-model为表单项目变量名称 -->
-                      <el-option label="请选择" value=""></el-option>
-                      <el-option label="商户" value="1"></el-option>
-                      <el-option label="门店" value="0"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="用例名称" prop="endClearTime">
-                    <el-input v-model="formInfo.merNo"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="12">
-                <el-form-item label="url_schema" prop="beginRealStlDate">
-                    <el-input v-model="formInfo.merNo"></el-input>
-                </el-form-item>
-            </el-col>
-            <el-col :span="12">
-                <el-form-item label="匹配关键字" prop="endRealStlDate">
-                    <el-input v-model="formInfo.merNo"></el-input>
-                </el-form-item>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-form-item>
-                <el-button type="primary" @click="handleSubmit">查询</el-button>
-                <el-button @click="handleReset">重置</el-button>
-                <el-button type="primary" @click="handleAdd">新增</el-button>
-            </el-form-item>
-        </el-row>
-    </el-form>
+    
     <div class="search-table">
         <template>
             <el-table
@@ -53,28 +17,43 @@
                   >
                 </el-table-column> -->
                 <el-table-column
-                  prop="id"
-                  label="ID"
+                  prop="caseId"
+                  label="caseId"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="name"
-                  label="用例名称"
+                  prop="caseName"
+                  label="caseName"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="schema"
-                  label="url_schema"
+                  prop="isCrash"
+                  label="isCrash"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="keywords"
-                  label="关键字"
+                  prop="crashLog"
+                  label="crashLog"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="comments"
-                  label="备注"
+                  prop="createTime"
+                  label="createTime"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="screenShot"
+                  label="screenShot"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="troubledResponse"
+                  label="troubledResponse"
+                  >
+                </el-table-column>
+                <el-table-column
+                  prop="screenShot"
+                  label="screenShot"
                   >
                 </el-table-column>
                 <el-table-column
@@ -83,8 +62,7 @@
                   label="操作"
                   >
                   <span>
-                    <!-- <el-button @click="handleClick" type="text" size="small"></el-button> -->
-                    <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
+                    <el-button @click="handleClickDetail($index,tableData)" type="text" size="small">重现</el-button>
                   </span>
                 </el-table-column>
             </el-table>
@@ -213,11 +191,17 @@ export default {
     },
     created:function () {
         
-        
+       this.handleSearch();
     },
     mounted:function(){
     },
     methods: {
+        handleClickDetail(index,tableData){
+          var taskId=urlData.taskId
+          var troubledStrategy=tableData[index].troubledStrategy;
+          console.log(taskId);
+          console.log(troubledStrategy);
+        },
         closeModal:function(){
             this.displayInfo.showModal=false;
         },
@@ -319,16 +303,9 @@ export default {
         },
         handleSearch(){
           var _this=this;
-          this.formInfo.beginClearTime=fanUtils.formatDate(this.formInfo.beginClearTime);
-          this.formInfo.endClearTime=fanUtils.formatDate(this.formInfo.endClearTime);
-          this.formInfo.beginRealStlDate=fanUtils.formatDate(this.formInfo.beginRealStlDate);
-          this.formInfo.endRealStlDate=fanUtils.formatDate(this.formInfo.endRealStlDate);
-          var param=fanUtils.deleteEmptyJsonItem(this.formInfo);
-          console.log('param:');
-          console.log(param);
-          
+          var logId=urlData.logId;
           this.displayInfo.showLoading=true;
-          this.$http.get('/tmonkeyApi/logs',{params:{}}).then(function(response){
+          this.$http.get('/tmonkeyApi/logs/'+logId,{params:{}}).then(function(response){
             console.log(response.data);
             var data=response.data;
             //_this.displayInfo.showLoading = false;
@@ -337,16 +314,7 @@ export default {
             _this.displayInfo.showLoading=false;
             if(data.code==0){
               _this.tableData=data.data;
-              // data.data.forEach(function(item,index){
-              //   _this.tableData.push({
-              //     'num':item[0],
-              //     'name':item[1],
-              //     'schema':item[2],
-              //     'keywords':item[3],
-              //     'comments':item[4],
-              //   });
-
-              // });
+              
             }
             
             else {
