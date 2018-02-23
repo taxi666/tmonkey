@@ -10,12 +10,6 @@
             v-loading="displayInfo.showLoading"
             element-loading-text="拼命加载中"
             style="width: 100%" >
-                <!-- <el-table-column
-                  prop="tuandui"
-                  label="团队"
-                  sortable
-                  >
-                </el-table-column> -->
                 <el-table-column
                   prop="caseId"
                   label="caseId"
@@ -39,22 +33,27 @@
                 <el-table-column
                   prop="createTime"
                   label="createTime"
+                  width="160"
                   >
                 </el-table-column>
                 <el-table-column
-                  prop="screenShot"
                   label="screenShot"
                   >
+                  <template slot-scope="scope">
+                    <el-button
+                    size="small"
+                    @click="handleClickShot(scope.$index, tableData)">图片</el-button>
+                  </template>
                 </el-table-column>
                 <el-table-column
-                  prop="troubledResponse"
                   label="troubledResponse"
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="screenShot"
-                  label="screenShot"
-                  >
+                >
+                <template slot-scope="scope">
+                  <el-button
+                  size="small"
+                  @click="handleClickResponse(scope.$index, tableData)">报文</el-button>
+                </template>
+                
                 </el-table-column>
                 <el-table-column
                   inline-template
@@ -62,7 +61,7 @@
                   label="操作"
                   >
                   <span>
-                    <el-button @click="handleClickDetail($index,tableData)" type="text" size="small">重现</el-button>
+                    <el-button @click="handleClickDetail(scope.$index,tableData)" type="text" size="small">重现</el-button>
                   </span>
                 </el-table-column>
             </el-table>
@@ -85,26 +84,31 @@
     <!-- <toast :showToast="displayInfo.showToast" :txt="displayInfo.toastTxt" v-on:closeToast="closeToast"></toast> -->
     <!--loading-->
     <!-- <loading :show="displayInfo.showLoading"></loading> -->
-    <el-dialog title="更改拨款日期" v-model="displayInfo.showDialog">
-      <el-form :model="modifyFormInfo" label-width="200px">
-        <el-row>
-            <el-col :span="16">
-                <el-form-item label="实际拨款日期" prop="beginClearTime">
-                  <el-date-picker type="date" placeholder="" v-model="modifyFormInfo.realDate" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-            </el-col>
-        </el-row>
-      </el-form>
+    <el-dialog title="查看报文" :visible.sync="displayInfo.showDialog" width="80%">
+      <div class="" style="height:400px;overflow-y:auto;">
+        <pre>{{troubledResponse}}</pre>
+      </div>
+      
       <div slot="footer" class="dialog-footer">
-        <el-button @click="displayInfo.showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleModifySubmit">确 定</el-button>
+        <!-- <el-button @click="displayInfo.showDialog = false">取 消</el-button> -->
+        <el-button type="primary" @click="displayInfo.showDialog = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="查看图片" :visible.sync="displayInfo.showDialog2" width="300px">
+      <div class="" style="overflow-y:auto;">
+        <img :src="screenShot" style="width:100%;" />
+      </div>
+      
+      <div slot="footer" class="dialog-footer">
+        <!-- <el-button @click="displayInfo.showDialog = false">取 消</el-button> -->
+        <el-button type="primary" @click="displayInfo.showDialog = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-var Vue = require('vue');
-var VueResource = require('vue-resource');
+import Vue from 'vue'
+import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
 import ElementUI from 'element-ui'
@@ -118,6 +122,27 @@ const successCode='0000';
 
 import fanUtils from '../../common/js/fanUtils.js'
 // import util from '../../common/js/util.js'
+
+Date.prototype.format = function(fmt) { 
+     var o = { 
+        "M+" : this.getMonth()+1,                 //月份 
+        "d+" : this.getDate(),                    //日 
+        "h+" : this.getHours(),                   //小时 
+        "m+" : this.getMinutes(),                 //分 
+        "s+" : this.getSeconds(),                 //秒 
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+        "S"  : this.getMilliseconds()             //毫秒 
+    }; 
+    if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+    }
+     for(var k in o) {
+        if(new RegExp("("+ k +")").test(fmt)){
+             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+         }
+     }
+    return fmt; 
+}   
 
 var urlData=fanUtils.GetRequest();
 // var getGPS=function(callback){
@@ -157,6 +182,8 @@ export default {
             pageSize:20,
             pageNum:1,
         },
+        troubledResponse:'',
+        screenShot:'',
         modifyFormInfo:{
           realDate:'',
           id:''
@@ -178,6 +205,7 @@ export default {
           toastTxt:'',
           showLoading:false,
           showDialog:false,
+          showDialog2:false,
         },
         currentPage1: 5,
         currentPage2: 5,
@@ -201,6 +229,15 @@ export default {
           var troubledStrategy=tableData[index].troubledStrategy;
           console.log(taskId);
           console.log(troubledStrategy);
+        },
+        handleClickResponse(index,tableData){
+          this.troubledResponse=tableData[index].troubledResponse;
+          this.displayInfo.showDialog=true;
+        },
+        handleClickShot(index,tableData){
+          this.screenShot=tableData[index].screenShot;
+          debugger
+          this.displayInfo.showDialog2=true;
         },
         closeModal:function(){
             this.displayInfo.showModal=false;
@@ -314,6 +351,13 @@ export default {
             _this.displayInfo.showLoading=false;
             if(data.code==0){
               _this.tableData=data.data;
+              _this.tableData.forEach(function(item,index){
+                item.screenShot='data:image/png;base64,'+item.screenShot;
+                item.troubledResponse=JSON.stringify(JSON.parse(JSON.parse(item.troubledResponse)),null, 4);
+                debugger
+                item.createTime=new Date(item.createTime).format("yyyy-MM-dd hh:mm:ss");
+
+              }); 
               
             }
             
@@ -328,6 +372,3 @@ export default {
 }
 </script>
 
-<style lang="less">
-@import 'app.less';
-</style>

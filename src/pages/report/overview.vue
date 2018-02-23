@@ -4,7 +4,7 @@
         <el-row>
             <el-col :span="12">
                 <el-form-item label="团队" prop="beginClearTime">
-                    <el-select v-model="formInfo.merFlag"><!-- 下拉选择框，v-model为表单项目变量名称 -->
+                    <el-select v-model="formInfo.platform"><!-- 下拉选择框，v-model为表单项目变量名称 -->
                       <el-option label="请选择" value=""></el-option>
                       <el-option label="商户" value="1"></el-option>
                       <el-option label="门店" value="0"></el-option>
@@ -75,6 +75,7 @@
                 <el-table-column
                   prop="createTime"
                   label="时间"
+                   width="160"
                   >
                 </el-table-column>
                 <el-table-column
@@ -82,8 +83,13 @@
                   :context="_self"
                   label="操作"
                   >
+                  <template slot-scope="scope">
+                    <el-button @click="handleClickDetail(scope.$index,tableData)" type="text" size="small">详情</el-button>
+                    
+                  </template>
                   <span>
-                    <el-button @click="handleClickDetail($index,tableData)" type="text" size="small">详情</el-button>
+
+                    <!-- <el-button @click="handleClickDetail($index,tableData)" type="text" size="small">详情</el-button> -->
                     <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
                   </span>
                 </el-table-column>
@@ -125,8 +131,8 @@
   </div>
 </template>
 <script>
-var Vue = require('vue');
-var VueResource = require('vue-resource');
+import Vue from 'vue'
+import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
 import ElementUI from 'element-ui'
@@ -172,12 +178,8 @@ export default {
     data:function() {
       return {
         formInfo:{
-            beginClearTime:'',
-            endClearTime:'',
-            beginRealStlDate:'',
-            endRealStlDate:'',
-            pageSize:20,
-            pageNum:1,
+           
+            platform:''
         },
         modifyFormInfo:{
           realDate:'',
@@ -344,6 +346,11 @@ export default {
             _this.displayInfo.showLoading=false;
             if(data.code==0){
               _this.tableData=data.data;
+              _this.tableData.forEach(function(item,index){
+    
+                item.createTime=new Date(item.createTime).format("yyyy-MM-dd hh:mm:ss");
+
+              }); 
               // data.data.forEach(function(item,index){
               //   _this.tableData.push({
               //     'num':item[0],
@@ -366,7 +373,3 @@ export default {
     },
 }
 </script>
-
-<style lang="less">
-@import 'app.less';
-</style>

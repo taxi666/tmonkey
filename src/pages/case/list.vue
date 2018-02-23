@@ -117,26 +117,12 @@
     <!-- <toast :showToast="displayInfo.showToast" :txt="displayInfo.toastTxt" v-on:closeToast="closeToast"></toast> -->
     <!--loading-->
     <!-- <loading :show="displayInfo.showLoading"></loading> -->
-    <el-dialog title="更改拨款日期" v-model="displayInfo.showDialog">
-      <el-form :model="modifyFormInfo" label-width="200px">
-        <el-row>
-            <el-col :span="16">
-                <el-form-item label="实际拨款日期" prop="beginClearTime">
-                  <el-date-picker type="date" placeholder="" v-model="modifyFormInfo.realDate" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-            </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="displayInfo.showDialog = false">取 消</el-button>
-        <el-button type="primary" @click="handleModifySubmit">确 定</el-button>
-      </div>
-    </el-dialog>
+   
   </div>
 </template>
 <script>
-var Vue = require('vue');
-var VueResource = require('vue-resource');
+import Vue from 'vue'
+import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
 import ElementUI from 'element-ui'
@@ -369,7 +355,3 @@ export default {
     },
 }
 </script>
-
-<style lang="less">
-@import 'app.less';
-</style>

@@ -87,8 +87,10 @@
   </div>
 </template>
 <script>
-var Vue = require('vue');
-var VueResource = require('vue-resource');
+
+
+import Vue from 'vue'
+import VueResource from 'vue-resource'
 
 Vue.use(VueResource);
 import ElementUI from 'element-ui'
@@ -298,6 +300,3 @@ export default {
 }
 </script>
 
-<style lang="less">
-@import 'app.less';
-</style>

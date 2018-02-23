@@ -1,26 +1,26 @@
 <template>
 
-	<div id="app">
-		<div id="headBar" class="head_bar">
-		  <h1>Toubled Monkey</h1>
-		  <!-- <div class="head_info">
-		    <span>您好，{{userInfo.name}}</span>
-		    <a href="javascript:;" class="" @click="logout">退出</a>
-		  </div> -->
-		</div>
-		<div class="index_body">
-		  <div id="sideBar" class="side_bar">
+  <div id="app">
+    <div id="headBar" class="head_bar">
+      <h1>Toubled Monkey</h1>
+      <!-- <div class="head_info">
+        <span>您好，{{userInfo.name}}</span>
+        <a href="javascript:;" class="" @click="logout">退出</a>
+      </div> -->
+    </div>
+    <div class="index_body">
+      <div id="sideBar" class="side_bar">
         <el-menu class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" unique-opened >
-		      <el-submenu index="3" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
+          <el-submenu index="3" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
             <template slot="title" >测试用例管理</template><!-- 菜单名称 -->
             <el-menu-item index="3-1" ><router-link :to="{name:'caseList'}">列表</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
             <el-menu-item index="3-2" ><router-link :to="{name:'caseAdd'}">新增</router-link></el-menu-item>
           </el-submenu>
           <el-submenu index="1" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
-		        <template slot="title" >测试任务管理</template><!-- 菜单名称 -->
+            <template slot="title" >测试任务管理</template><!-- 菜单名称 -->
             <el-menu-item index="1-1" ><router-link :to="{name:'taskList'}">列表</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
             <el-menu-item index="1-2" ><router-link :to="{name:'taskAdd'}">新增</router-link></el-menu-item>
-		      </el-submenu>
+          </el-submenu>
           <el-submenu index="2" ><!-- 菜单，showMenu中的参数是该菜单项目总权限 -->
             <template slot="title" >测试报告</template><!-- 菜单名称 -->
             <el-menu-item index="2-1" ><router-link :to="{name:'reportOverview'}">总览</router-link></el-menu-item><!-- 1级菜单，showMenu中参数与后端商定，根据角色权限控制是否显示 -->
@@ -28,13 +28,13 @@
             
           </el-submenu>
           
-		      
-		    </el-menu>
-		  </div>
-		  <div id="pageContainer" class="page_container">
-		    <router-view class="view"></router-view>
+          
+        </el-menu>
       </div>
-		</div>
+      <div id="pageContainer" class="page_container">
+        <router-view class="view"></router-view>
+      </div>
+    </div>
 
     <!-- <router-view class="view"></router-view> -->
   </div>
@@ -99,9 +99,234 @@ export default {
 }
 
 
+Date.prototype.format = function(fmt) { 
+     var o = { 
+        "M+" : this.getMonth()+1,                 //月份 
+        "d+" : this.getDate(),                    //日 
+        "h+" : this.getHours(),                   //小时 
+        "m+" : this.getMinutes(),                 //分 
+        "s+" : this.getSeconds(),                 //秒 
+        "q+" : Math.floor((this.getMonth()+3)/3), //季度 
+        "S"  : this.getMilliseconds()             //毫秒 
+    }; 
+    if(/(y+)/.test(fmt)) {
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length)); 
+    }
+     for(var k in o) {
+        if(new RegExp("("+ k +")").test(fmt)){
+             fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+         }
+     }
+    return fmt; 
+}   
+
+
 </script>
 
-<style lang="less">
-@import url(./common/less/index.less);
-</style>
+<style>
+  /*body {
+  font-family: Helvetica, sans-serif;
+}*/
+body,
+p,
+ul,
+ol,
+li,
+dl,
+dt,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+form,
+fieldset,
+img,
+legend,
+input,
+select,
+textarea,
+button,
+th,
+td,
+menu,
+article,
+pre {
+  margin: 0;
+  padding: 0;
+}
 
+pre {
+  white-space: normal;
+}
+
+article,
+aside,
+dialog,
+figure,
+footer,
+header,
+nav,
+section,
+select,
+time {
+  display: block;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea,
+select,
+button,
+label {
+  font-size: 100%;
+  font-weight: 100;
+  vertical-align: middle;
+}
+
+ul,
+dl,
+ol {
+  list-style: none;
+}
+
+img,
+fieldset,
+input[type="submit"] {
+  border: none;
+}
+
+input {
+  outline: none;
+  background: transparent;
+  vertical-align: top;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+textarea {
+  word-wrap: break-word;
+  resize: none;
+}
+
+input,
+textarea,
+select {
+  -webkit-appearance: none;
+  border-radius: 0;
+  border: none;
+  outline: none;
+  transform: translate(0, 0);
+  -webkit-transform: translate(0, 0);
+}
+
+::-webkit-input-placeholder {
+  color: #9cabba;
+}
+
+.input[placeholder] {
+  color: #000;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+  color: #383838;
+  margin: auto;
+  font-family: Helvetica Neue LT, Heiti SC, Arial, sans-serif;
+}
+
+html,
+body {
+  -webkit-text-size-adjust: none;
+  height: 100%;
+  min-width: 300px;
+  width: 100%;
+  background:#fff;
+  font-size:14px;
+}
+
+a,
+button,
+input {
+  -webkit-touch-callout: none;
+  outline: none;
+  color: #475669;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+  -webkit-touch-callout: none;
+  color: #475669;
+}
+a:hover {
+  color:#20a0ff;
+}
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+/*layout */
+.head_bar {
+  position:relative;
+  height:50px;
+  padding:0 40px;
+  margin-bottom: 10px;
+  background:#eff2f7;
+  color:#475669;
+
+} 
+.head_bar h1 {float:left;line-height: 50px;font-size:16px;}
+.head_info {
+  float: right;line-height: 50px;
+  a {
+    margin-left: 15px;
+  }
+}
+.index_body {padding:0 20px;}
+.side_bar {
+  float: left;
+  width:240px;
+  margin-right:20px;
+    a{
+      display:block;
+      color:#475669;
+    }
+}
+.page_container {
+  padding:30px 15px 0 10px;
+  overflow: auto;
+}
+.search-form {
+  margin-bottom:20px;
+}
+.search-table {
+  margin-bottom:20px;
+}
+.el-menu-item.is-active a{color:#20a0ff}
+pre{
+  white-space: pre;
+}
+</style>
