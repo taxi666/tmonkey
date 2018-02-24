@@ -87,16 +87,7 @@
                   label="备注"
                   >
                 </el-table-column>
-                <el-table-column
-                  inline-template
-                  :context="_self"
-                  label="操作"
-                  >
-                  <span>
-                    <!-- <el-button @click="handleClick" type="text" size="small"></el-button> -->
-                    <!-- <el-button type="text" size="small" @click.native.prevent="handleModify($index,tableData)">编辑</el-button> -->
-                  </span>
-                </el-table-column>
+                
             </el-table>
         </template>
     </div>
