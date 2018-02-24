@@ -73,14 +73,13 @@
                   >
                 </el-table-column>
                 <el-table-column
-                  inline-template
-                  :context="_self"
                   label="操作"
                   >
-                  <span>
-                    <!-- <el-button @click="handleClick" type="text" size="small">handleRun</el-button> -->
-                    <el-button type="text" size="small" @click.native.prevent="handleRun($index,tableData)">执行</el-button>
-                  </span>
+                  <template slot-scope="scope">
+                    <el-button
+                    size="small"
+                    @click="handleRun(scope.$index, tableData)">执行</el-button>
+                  </template>
                 </el-table-column>
             </el-table>
         </template>
@@ -102,7 +101,7 @@
     <!-- <toast :showToast="displayInfo.showToast" :txt="displayInfo.toastTxt" v-on:closeToast="closeToast"></toast> -->
     <!--loading-->
     <!-- <loading :show="displayInfo.showLoading"></loading> -->
-    <el-dialog title="更改拨款日期" v-model="displayInfo.showDialog">
+    <!-- <el-dialog title="更改拨款日期" v-model="displayInfo.showDialog">
       <el-form :model="modifyFormInfo" label-width="200px">
         <el-row>
             <el-col :span="16">
@@ -116,7 +115,7 @@
         <el-button @click="displayInfo.showDialog = false">取 消</el-button>
         <el-button type="primary" @click="handleModifySubmit">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 <script>
